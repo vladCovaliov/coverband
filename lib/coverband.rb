@@ -7,6 +7,8 @@ require 'coverband/redis_store'
 require 'coverband/base'
 require 'coverband/reporter'
 require 'coverband/middleware'
+require 'coverband/coverage_base'
+require 'coverband/coverage_middleware'
 
 module Coverband
 
