@@ -3,6 +3,7 @@ module Coverband
 
     def self.baseline
       require 'coverage'
+
       Coverage.start
       yield
       @project_directory = File.expand_path(Coverband.configuration.root)
@@ -34,7 +35,7 @@ module Coverband
         Coverband.configuration.logger.info "fixing root: #{roots.join(', ')}"
       end
 
-      if  Coverband.configuration.reporter=='scov'
+      if Coverband.configuration.reporter == 'scov'
         additional_scov_data = options.fetch(:additional_scov_data){ [] }
         if Coverband.configuration.verbose
           print additional_scov_data
@@ -188,7 +189,9 @@ module Coverband
     # {"/Users/danmayer/projects/hearno/script/tester.rb"=>[1, nil, 1, 1, nil, nil, nil]}
     def self.line_hash(redis, key, roots)
       filename = filename_from_key(key, roots)
+
       if File.exists?(filename)
+        key = replace_path(key)
         lines_hit = redis.smembers("coverband.#{key}")
         count = File.foreach(filename).inject(0) {|c, line| c+1}
         if filename.match(/\.erb/)
@@ -204,5 +207,9 @@ module Coverband
       end
     end
 
+    def self.replace_path(key)
+      path = Coverband.configuration.path_replace
+      key.gsub(path[0], path[1])
+    end
   end
 end

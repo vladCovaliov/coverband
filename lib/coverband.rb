@@ -44,5 +44,4 @@ module Coverband
   def self.configuration
     self.configuration_data ||= Configuration.new
   end
-
 end
